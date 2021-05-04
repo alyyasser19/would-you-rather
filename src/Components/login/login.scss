@@ -1,0 +1,20 @@
+.login-container {
+  width: 40%;
+  margin-left: 30%;
+  margin-top: 18%;
+  text-align: -webkit-center;
+  .MuiButton-outlined {
+    margin-top: 2em;
+  }
+  .MuiTypography-colorTextPrimary {
+    margin-bottom: 1em;
+  }
+  .MuiCard-root {
+    overflow: hidden;
+    border-width: 2em;
+    border-color: lightsteelblue;
+  }
+  .MuiSelect-selectMenu{
+      width:10em;   
+  }
+}
