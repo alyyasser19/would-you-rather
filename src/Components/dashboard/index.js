@@ -41,9 +41,6 @@ const Dashboard = () => {
     };
   }
 
-  useEffect(() => {
-    console.log(answered);
-  }, []);
 
   return (
     <div className="dashboard-container">

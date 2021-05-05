@@ -175,15 +175,19 @@ export function _saveQuestion(question) {
   });
 }
 
-export function _saveQuestionAnswer({ authedUser, qid, answer }) {
+export function _saveQuestionAnswer( user) {
+  console.log(user.authUser.qid)
+  const authenticatedUser = user.authUser.authedUser;
+  const qid = user.authUser.qid;
+  const answer = user.authUser.answer;
   return new Promise((res, rej) => {
     setTimeout(() => {
       users = {
         ...users,
-        [authedUser]: {
-          ...users[authedUser],
+        [authenticatedUser]: {
+          ...users[authenticatedUser],
           answers: {
-            ...users[authedUser].answers,
+            ...users[authenticatedUser].answers,
             [qid]: answer,
           },
         },
@@ -195,7 +199,7 @@ export function _saveQuestionAnswer({ authedUser, qid, answer }) {
           ...questions[qid],
           [answer]: {
             ...questions[qid][answer],
-            votes: questions[qid][answer].votes.concat([authedUser]),
+            votes: questions[qid][answer].votes.concat([authenticatedUser]),
           },
         },
       };

@@ -9,19 +9,20 @@ export function receiveUsers(users) {
   };
 }
 
-export function addQuestionUser(authedUser, qid) {
+export function addQuestionUser(authenticatedUser, qid) {
   return {
     type: ADD_QUESTION_USER,
-    authedUser,
+    authenticatedUser,
     qid,
   };
 }
 
-export function addAnswerUser(authedUser, qid, choice) {
+export function addAnswerUser({authenticatedUser, qid, answer}) {
+  console.log(authenticatedUser,qid,answer);
   return {
     type: ADD_ANSWER_USER,
-    authedUser,
+    authenticatedUser,
     qid,
-    choice,
+    answer,
   };
 }

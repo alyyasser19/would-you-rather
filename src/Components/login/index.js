@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { setAuthenticatedUser } from "../../actions/authenticateUser";
@@ -49,9 +49,6 @@ export default function Index() {
     return <Redirect to="/" />;
   };
 
-  useEffect(() => {
-    console.log(Object.keys(users));
-  }, []);
 
   return (
     <div>

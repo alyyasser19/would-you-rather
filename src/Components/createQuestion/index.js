@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, TextField, Paper, Grid, Button } from "@material-ui/core";
+import {
+  Typography,
+  TextField,
+  Paper,
+  Grid,
+  Button,
+  Snackbar,
+} from "@material-ui/core";
+import { useDispatch, useSelector } from "react-redux";
+import { handleAddQuestion } from "../../actions/shared";
+import MuiAlert  from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,8 +64,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const QuestionCard = () => {
   const classes = useStyles();
+  const authenticatedUser = useSelector((state) => state.authenticatedUser);
+  const dispatch = useDispatch();
+  const [option1, setOption1] = useState("");
+  const [option2, setOption2] = useState("");
+  const [open, setOpen] = useState(false);
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const handleAnswer = (e) => {
+    dispatch(handleAddQuestion(authenticatedUser, option1, option2));
+    //show sucess
+  };
 
   return (
     <div className="questions-container">
@@ -74,19 +109,40 @@ const QuestionCard = () => {
               <Typography variant="subtitle1" className={classes.question}>
                 Would You Rather
               </Typography>
-              <TextField id="filled-basic" label="" />
+              <TextField
+                id="filled-basic"
+                label=""
+                onChange={(e) => {
+                  setOption1(e.target.value);
+                }}
+              />
               <Typography variant="subtitle1" className={classes.question}>
                 Or
               </Typography>
-              <TextField id="filled-basic" label="" />
+              <TextField
+                id="filled-basic"
+                label=""
+                onChange={(e) => {
+                  setOption2(e.target.value);
+                }}
+              />
               <Button
                 variant="contained"
                 size="large"
                 className={classes.marginTop}
                 color="secondary"
-                fullwidth>
+                onClick={() => {handleAnswer();
+                handleClick();}}>
                 Submit
               </Button>
+              <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success">
+                  Question Added!
+                </Alert>
+              </Snackbar>
             </Grid>
           </Paper>
         </Grid>

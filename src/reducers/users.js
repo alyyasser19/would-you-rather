@@ -12,21 +12,22 @@ export default function users(state = {}, action) {
         ...action.users,
       };
     case ADD_ANSWER_USER:
-      const { authUser, qid, answer } = action;
-
+      const { authenticatedUser, qid, answer } = action;
+      console.log(authenticatedUser ,qid, answer);
       return {
         ...state,
-        [authUser]: {
-          ...state[authUser],
+        [authenticatedUser]: {
+          ...state[authenticatedUser],
           answers: {
-            ...state[authUser].answers,
+            ...state[authenticatedUser].answers,
             [qid]: answer,
           },
         },
       };
     case ADD_QUESTION_USER:
-      const { id, author } = action;
-
+      const author = action.authenticatedUser;
+      const id = action.id
+      console.log(action);
       return {
         ...state,
         [author]: {

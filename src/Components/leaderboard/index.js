@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Avatar, Paper, Grid, Button } from "@material-ui/core";
+import { Typography, Avatar, Paper, Grid } from "@material-ui/core";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,60 +67,71 @@ const useStyles = makeStyles((theme) => ({
 
 const QuestionCard = () => {
   const classes = useStyles();
+  const users = useSelector((state) => state.users);
+  const orderedUsers = Object.values(users).sort((a, b) => {
+    const low = Object.keys(a.answers).length + a.questions.length;
+    const high = Object.keys(b.answers).length + b.questions.length;
+    return high - low;
+  });
 
   return (
     <div className="questions-container">
-      <div className={classes.root}>
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Typography className={classes.header}>Aoly Asks:</Typography>
-          <Paper elevation={10} className={classes.paper}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              className={classes.userBox}>
-              <Avatar
-                alt="Aoly"
-                src="https://avatars.githubusercontent.com/u/51823470?s=400&u=f1283ef3ac9c787c24849fe06e51043d03ee26da&v=4"
-                className={classes.large}
-              />
-              <Typography variant="h6">Aoly</Typography>
-            </Grid>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              className={classes.questionBox}>
-              <Typography variant="subtitle1" className={classes.wouldYou}>
-                Answered Questions:
-              </Typography>
-              <Typography variant="subtitle1" className={classes.wouldYou}>
-                Created Questions:
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              className={classes.questionBox}>
-              <Typography variant="h6" className={classes.score}>
-                Score:
-              </Typography>
-              <Paper
-                variant="outlined"
-                elevation={20}
-                className={classes.round}>
-                <Typography variant="h6" className={classes.wouldYou}>
-                  100
+      {orderedUsers.map((user) => (
+        <div className={classes.root} id={user}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center">
+            <Typography className={classes.header}>{user.name}</Typography>
+            <Paper elevation={10} className={classes.paper}>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                className={classes.userBox}>
+                <Avatar
+                  alt="Aoly"
+                  src={user.avatarURL}
+                  className={classes.large}
+                />
+              </Grid>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                className={classes.questionBox}>
+                <Typography variant="subtitle1" className={classes.wouldYou}>
+                  Answered Questions: {Object.keys(user.answers).length}
                 </Typography>
-              </Paper>
-            </Grid>
-          </Paper>
-        </Grid>
-      </div>
+                <Typography variant="subtitle1" className={classes.wouldYou}>
+                  Created Questions: {user.questions.length}
+                </Typography>
+              </Grid>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                className={classes.questionBox}>
+                <Typography variant="h6" className={classes.score}>
+                  Score:
+                </Typography>
+                <Paper
+                  variant="outlined"
+                  elevation={20}
+                  className={classes.round}>
+                  <Typography variant="h6" className={classes.wouldYou}>
+                    {Object.keys(user.answers).length + user.questions.length}
+                  </Typography>
+                </Paper>
+              </Grid>
+            </Paper>
+          </Grid>
+        </div>
+      ))}
     </div>
   );
 };

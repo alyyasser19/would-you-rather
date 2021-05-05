@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Avatar, Paper, Grid, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
-import {handleAnswer} from "../../actions/shared";
+import { handleAnswer } from "../../actions/shared";
 import Results from "../Results";
 
 const useStyles = makeStyles((theme) => ({
@@ -67,13 +67,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 const Index = (props) => {
   const classes = useStyles();
-   const users = useSelector((state) => state.users);
-   const authenticatedUser = useSelector((state) => state.authenticatedUser);
+  const users = useSelector((state) => state.users);
+  const authenticatedUser = useSelector((state) => state.authenticatedUser);
   const [unanswered, setUnanswer] = useState(true);
+  const [selected, setSelected] = useState("");
   const dispatch = useDispatch();
-
+    useEffect(() => {
+      if(typeof props.location.state!=='undefined') 
+      if (
+        optionOne.votes.includes(authenticatedUser) ||
+        optionTwo.votes.includes(authenticatedUser)
+      ) {
+        setUnanswer(false);
+      }
+    }, []);
+  if (typeof props.location.state==='undefined') {
+    return (
+      <Typography variant="h6" className={classes.wouldYou}>
+        ERROR 404 PAGE DOESNT EXIST
+      </Typography>
+    );
+  }
   const {
     id,
     author,
@@ -81,14 +98,6 @@ const Index = (props) => {
     optionTwo,
   } = props.location.state.question.question;
 
-  useEffect(() => {
-    console.log(authenticatedUser, id, optionOne);
-  }, []);
-
-  const handleSubmit = (answer) => {
-    dispatch(handleAnswer(authenticatedUser,id,answer));
-    setUnanswer(true);
-  };
 
   return (
     <div className="questions-container">
@@ -127,8 +136,9 @@ const Index = (props) => {
                   color="primary"
                   size="large"
                   onClick={() => {
-                   dispatch(handleAnswer(authenticatedUser, id, optionOne));
-                   setUnanswer(true);
+                    dispatch(handleAnswer(authenticatedUser, id, "optionOne"));
+                    setSelected(optionOne.text);
+                    setUnanswer(false);
                   }}>
                   {optionOne.text}
                 </Button>
@@ -139,8 +149,9 @@ const Index = (props) => {
                   color="secondary"
                   size="large"
                   onClick={() => {
-                    dispatch(handleAnswer(authenticatedUser, id, optionTwo));
-                    setUnanswer(true);
+                    dispatch(handleAnswer(authenticatedUser, id, "optionTwo"));
+                    setSelected(optionTwo.text);
+                    setUnanswer(false);
                   }}>
                   {optionTwo.text}
                 </Button>
@@ -149,7 +160,14 @@ const Index = (props) => {
           </Grid>
         </div>
       ) : (
-        <Results />
+        <Results
+          id={id}
+          author={author}
+          optionTwo={optionTwo}
+          optionOne={optionOne}
+          img={users[author].avatarURL}
+          selected={selected}
+        />
       )}
     </div>
   );

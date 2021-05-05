@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, Avatar, Paper, Grid, Button } from "@material-ui/core";
+import { Typography, Avatar, Paper, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,14 +64,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuestionCard = () => {
+const QuestionCard = ({ id, author, optionOne, optionTwo,img,selected }) => {
   const classes = useStyles();
-
+    useEffect(() => {
+      console.log(selected === optionOne.text, selected === optionTwo.text);
+    }, []);
   return (
     <div className="questions-container">
       <div className={classes.root}>
         <Grid container direction="column" justify="center" alignItems="center">
-          <Typography className={classes.header}>Aoly Asks:</Typography>
+          <Typography className={classes.header}>{author} Asks:</Typography>
           <Paper elevation={10} className={classes.paper}>
             <Grid
               container
@@ -79,11 +81,7 @@ const QuestionCard = () => {
               justify="center"
               alignItems="center"
               className={classes.userBox}>
-              <Avatar
-                alt="Aoly"
-                src="https://avatars.githubusercontent.com/u/51823470?s=400&u=f1283ef3ac9c787c24849fe06e51043d03ee26da&v=4"
-                className={classes.large}
-              />
+              <Avatar alt="Aoly" src={img} className={classes.large} />
               <Typography variant="h6">Aoly</Typography>
             </Grid>
             <Grid
@@ -93,19 +91,27 @@ const QuestionCard = () => {
               alignItems="center"
               className={classes.questionBox}>
               <Typography variant="h6" className={classes.wouldYou}>
-                Option 1:
+                {optionOne.text} :
               </Typography>
               <Paper
                 variant="outlined"
                 elevation={20}
-                className={classes.round}></Paper>
+                className={classes.round}>
+                {selected === optionOne.text
+                  ? optionOne.votes.length + 1
+                  : optionOne.votes.length}
+              </Paper>
               <Typography variant="h6" className={classes.wouldYou}>
-                Option 2:
+                {optionTwo.text} :
               </Typography>
               <Paper
                 variant="outlined"
                 elevation={20}
-                className={classes.round}>10</Paper>
+                className={classes.round}>
+                {(selected === optionTwo.text)
+                  ? optionTwo.votes.length + 1
+                  : optionTwo.votes.length}
+              </Paper>
             </Grid>
           </Paper>
         </Grid>

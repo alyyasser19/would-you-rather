@@ -18,6 +18,7 @@ export function handeInitialData() {
 export function handleAddQuestion(currentUser, optionOne, optionTwo) {
   return (dispatch) => {
     dispatch(showLoading());
+    
 
     return saveQuestion({
       optionOneText: optionOne,
@@ -25,8 +26,9 @@ export function handleAddQuestion(currentUser, optionOne, optionTwo) {
       author: currentUser,
     })
       .then((question) => {
+        const qid = question.id;
         dispatch(addQuestion(question));
-        dispatch(addQuestionUser(currentUser, question.id));
+        dispatch(addQuestionUser(currentUser, qid));
       })
       .then(() => dispatch(hideLoading()));
   };
@@ -35,9 +37,9 @@ export function handleAddQuestion(currentUser, optionOne, optionTwo) {
 export function handleAnswer(authenticatedUser, qid, answer) {
   return (dispatch) => {
     dispatch(addAnswer({authenticatedUser, qid, answer}));
-    dispatch(addAnswerUser(authenticatedUser, qid, answer));
+    dispatch(addAnswerUser({authenticatedUser, qid, answer}));
     return saveQuestionAnswer({
-      authedUser: authenticatedUser,
+      authedUser : authenticatedUser,
       qid: qid,
       answer: answer,
     });

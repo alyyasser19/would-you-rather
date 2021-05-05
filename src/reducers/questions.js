@@ -17,7 +17,7 @@ export default function questions(state = {}, action) {
         ...action.questions,
       };
     case ADD_ANSWER:
-      console.log(action);
+      console.log(state[action.qid]["optionTwo"]);
       const votes = state[action.qid][action.answer].votes;
       return {
         ...state,
@@ -25,7 +25,7 @@ export default function questions(state = {}, action) {
           ...state[action.qid],
           [action.answer]: {
             ...state[action.qid][action.answer],
-            votes: votes.concat([action.authedUser]),
+            votes: votes.concat([action.authenticatedUser]),
           },
         },
       };

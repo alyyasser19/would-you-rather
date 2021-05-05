@@ -54,12 +54,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     width: "50%",
   },
+  a:{
+    textDecoration: "none",
+  }
 }));
 
 const QuestionCard = ({question}) => {
   const classes = useStyles();
   const users = useSelector((state) => state.users);
 
+  
   return (
     <div className="questions-container">
       <div className={classes.root}>
@@ -101,13 +105,13 @@ const QuestionCard = ({question}) => {
                 to={{
                   pathname: `/questions/${question.id}`,
                   state: { question: {question} },
-                }}>
+                }} className={classes.a}>
                 <Button
                   variant="contained"
                   size="large"
                   className={classes.marginTop}
                   color="secondary"
-                  fullwidth>
+                  >
                   POLL
                 </Button>
               </Link>
