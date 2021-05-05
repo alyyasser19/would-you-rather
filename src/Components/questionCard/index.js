@@ -1,6 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Avatar, Paper, Grid, Button } from "@material-ui/core";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,14 +56,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuestionCard = () => {
+const QuestionCard = ({question}) => {
   const classes = useStyles();
+  const users = useSelector((state) => state.users);
 
   return (
     <div className="questions-container">
       <div className={classes.root}>
         <Grid container direction="column" justify="center" alignItems="center">
-          <Typography className={classes.header}>Aoly Asks:</Typography>
+          <Typography className={classes.header}>
+            {question.author} Asks:
+          </Typography>
           <Paper elevation={10} className={classes.paper}>
             <Grid
               container
@@ -71,10 +76,10 @@ const QuestionCard = () => {
               className={classes.userBox}>
               <Avatar
                 alt="Aoly"
-                src="https://avatars.githubusercontent.com/u/51823470?s=400&u=f1283ef3ac9c787c24849fe06e51043d03ee26da&v=4"
+                src={users[question.author].avatarURL}
                 className={classes.large}
               />
-              <Typography variant="h6">Aoly</Typography>
+              <Typography variant="h6">{question.author}</Typography>
             </Grid>
             <Grid
               container
@@ -86,16 +91,26 @@ const QuestionCard = () => {
                 Would You Rather...
               </Typography>
               <Typography variant="subtitle1" className={classes.question}>
-                Be a Monkey or...
+                {question.optionOne.text}
+                <br />
+                or
+                <br />
+                {question.optionTwo.text}
               </Typography>
-              <Button
-                variant="contained"
-                size="large"
-                className={classes.marginTop}
-                color="secondary"
-                fullwidth>
-                POLL
-              </Button>
+              <Link
+                to={{
+                  pathname: `/questions/${question.id}`,
+                  state: { question: {question} },
+                }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  className={classes.marginTop}
+                  color="secondary"
+                  fullwidth>
+                  POLL
+                </Button>
+              </Link>
             </Grid>
           </Paper>
         </Grid>

@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Avatar, Paper, Grid, Button } from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
+import {handleAnswer} from "../../actions/shared";
+import Results from "../Results";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,47 +67,90 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Index = () => {
+const Index = (props) => {
   const classes = useStyles();
+   const users = useSelector((state) => state.users);
+   const authenticatedUser = useSelector((state) => state.authenticatedUser);
+  const [unanswered, setUnanswer] = useState(true);
+  const dispatch = useDispatch();
+
+  const {
+    id,
+    author,
+    optionOne,
+    optionTwo,
+  } = props.location.state.question.question;
+
+  useEffect(() => {
+    console.log(authenticatedUser, id, optionOne);
+  }, []);
+
+  const handleSubmit = (answer) => {
+    dispatch(handleAnswer(authenticatedUser,id,answer));
+    setUnanswer(true);
+  };
 
   return (
     <div className="questions-container">
-      <div className={classes.root}>
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Typography className={classes.header}>Aoly Asks:</Typography>
-          <Paper elevation={10} className={classes.paper}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              className={classes.userBox}>
-              <Avatar
-                alt="Aoly"
-                src="https://avatars.githubusercontent.com/u/51823470?s=400&u=f1283ef3ac9c787c24849fe06e51043d03ee26da&v=4"
-                className={classes.large}
-              />
-              <Typography variant="h6">Aoly</Typography>
-            </Grid>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              className={classes.questionBox}>
-              <Typography variant="h6" className={classes.wouldYou}>
-                Would You Rather:
-              </Typography>
-              <Button color="primary" size="large">
-                option 1
-              </Button>
-              <Button color="secondary" size="large">
-                option2
-              </Button>
-            </Grid>
-          </Paper>
-        </Grid>
-      </div>
+      {unanswered ? (
+        <div className={classes.root}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center">
+            <Typography className={classes.header}>{author} Asks:</Typography>
+            <Paper elevation={10} className={classes.paper}>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                className={classes.userBox}>
+                <Avatar
+                  alt="Aoly"
+                  src={users[author].avatarURL}
+                  className={classes.large}
+                />
+                <Typography variant="h6">{author}</Typography>
+              </Grid>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                className={classes.questionBox}>
+                <Typography variant="h6" className={classes.wouldYou}>
+                  Would You Rather:
+                </Typography>
+                <Button
+                  color="primary"
+                  size="large"
+                  onClick={() => {
+                   dispatch(handleAnswer(authenticatedUser, id, optionOne));
+                   setUnanswer(true);
+                  }}>
+                  {optionOne.text}
+                </Button>
+                <Typography variant="subtitle1" className={classes.wouldYou}>
+                  Or....
+                </Typography>
+                <Button
+                  color="secondary"
+                  size="large"
+                  onClick={() => {
+                    dispatch(handleAnswer(authenticatedUser, id, optionTwo));
+                    setUnanswer(true);
+                  }}>
+                  {optionTwo.text}
+                </Button>
+              </Grid>
+            </Paper>
+          </Grid>
+        </div>
+      ) : (
+        <Results />
+      )}
     </div>
   );
 };
