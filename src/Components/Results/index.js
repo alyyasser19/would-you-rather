@@ -1,6 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, Avatar, Paper, Grid } from "@material-ui/core";
+import { useSelector } from "react-redux";
+
+const styledBy = (property, mapping) => (props) => mapping[props[property]];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,13 +65,22 @@ const useStyles = makeStyles((theme) => ({
     borderColor: "rgba(255, 105, 135)",
     padding: "1em",
   },
+  selected: {
+    color: styledBy("color", {
+      default: "black",
+      blue: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
+    }),
+  },
 }));
 
-const QuestionCard = ({ id, author, optionOne, optionTwo,img,selected }) => {
+const QuestionCard = ({ id, author, optionOne, optionTwo, img, selected }) => {
   const classes = useStyles();
-    useEffect(() => {
-      console.log(selected === optionOne.text, selected === optionTwo.text);
-    }, []);
+  var cur="";
+  const authenticatedUser = useSelector((state) => state.authenticatedUser);
+
+ if (optionOne.votes.includes(authenticatedUser)) cur = optionOne.text;
+ else cur = optionTwo.text;
+
   return (
     <div className="questions-container">
       <div className={classes.root}>
@@ -90,7 +102,10 @@ const QuestionCard = ({ id, author, optionOne, optionTwo,img,selected }) => {
               justify="center"
               alignItems="center"
               className={classes.questionBox}>
-              <Typography variant="h6" className={classes.wouldYou}>
+              <Typography
+                variant="h6"
+                className={classes.selected}
+                >
                 {optionOne.text} :
               </Typography>
               <Paper
@@ -101,17 +116,26 @@ const QuestionCard = ({ id, author, optionOne, optionTwo,img,selected }) => {
                   ? optionOne.votes.length + 1
                   : optionOne.votes.length}
               </Paper>
-              <Typography variant="h6" className={classes.wouldYou}>
+              <Typography
+                variant="h6"
+                className={classes.selected}
+                >
                 {optionTwo.text} :
               </Typography>
               <Paper
                 variant="outlined"
                 elevation={20}
                 className={classes.round}>
-                {(selected === optionTwo.text)
+                {selected === optionTwo.text
                   ? optionTwo.votes.length + 1
                   : optionTwo.votes.length}
               </Paper>
+              <Typography
+                variant="h6"
+                className={classes.selected}
+                >
+                SELECTED : {selected || cur}
+              </Typography>
             </Grid>
           </Paper>
         </Grid>

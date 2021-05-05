@@ -75,6 +75,8 @@ const Index = (props) => {
   const [unanswered, setUnanswer] = useState(true);
   const [selected, setSelected] = useState("");
   const dispatch = useDispatch();
+
+    
     useEffect(() => {
       if(typeof props.location.state!=='undefined') 
       if (
@@ -83,7 +85,8 @@ const Index = (props) => {
       ) {
         setUnanswer(false);
       }
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [authenticatedUser,props.location.state]);
   if (typeof props.location.state==='undefined') {
     return (
       <Typography variant="h6" className={classes.wouldYou}>
@@ -91,13 +94,13 @@ const Index = (props) => {
       </Typography>
     );
   }
-  const {
-    id,
-    author,
-    optionOne,
-    optionTwo,
-  } = props.location.state.question.question;
-
+  
+    const {
+      id,
+      author,
+      optionOne,
+      optionTwo,
+    } = props.location.state.question.question;
 
   return (
     <div className="questions-container">
